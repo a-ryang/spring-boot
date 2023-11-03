@@ -2,6 +2,7 @@ package com.aryang.todo.global.exception;
 
 public enum ErrorCode {
     INVALID_REQUEST(400, "Invalid request"),
+    INVALID_VALUE_TYPES(400, "Invalid value types"),
     RESOURCE_NOT_FOUND(404, "Resource not found"),
     METHOD_NOT_ALLOWED(405,  "Invalid Method"),
     UNSUPPORTED_MEDIA_TYPE(415, "Media type not supported"),

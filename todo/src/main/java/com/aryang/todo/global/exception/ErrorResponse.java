@@ -1,9 +1,11 @@
 package com.aryang.todo.global.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,28 @@ public class ErrorResponse {
 
     public static ErrorResponse of(final ErrorCode errorCode, final BindingResult bindingResult) {
         return new ErrorResponse(errorCode, FieldError.of(bindingResult));
+    }
+
+    public static ErrorResponse of(final ConstraintViolationException e) {
+        final List<ErrorResponse.FieldError> errors = e.getConstraintViolations().stream()
+                .map(violation -> {
+                    String fullPath = violation.getPropertyPath().toString();
+                    String fieldName = fullPath.substring(fullPath.lastIndexOf('.') + 1); // 마지막 '.' 이후의 문자열을 필드 이름으로 추출
+                    return new ErrorResponse.FieldError(
+                            fieldName,
+                            violation.getInvalidValue() == null ? "" : violation.getInvalidValue().toString(),
+                            violation.getMessage());
+                })
+                .collect(Collectors.toList());
+
+        return new ErrorResponse(ErrorCode.INVALID_REQUEST, errors);
+    }
+
+
+    public static ErrorResponse of(final MethodArgumentTypeMismatchException e) {
+        final String value = e.getValue() == null ? "" : e.getValue().toString();
+        final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(e.getName(), value, e.getErrorCode());
+        return new ErrorResponse(ErrorCode.INVALID_VALUE_TYPES, errors);
     }
 
     @Getter
