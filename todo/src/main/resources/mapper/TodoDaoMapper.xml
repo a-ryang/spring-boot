@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aryang.todo.domain.todo.dao.TodoDao">
+
+    <insert
+            id="save"
+            parameterType="com.aryang.todo.domain.todo.entity.Todo"
+            useGeneratedKeys="true"
+            keyProperty="id"
+    >
+        INSERT INTO todo (member_id, content)
+        VALUES (#{memberId}, #{content})
+    </insert>
+
+    <select id="findListByMemberId" resultType="com.aryang.todo.domain.todo.entity.Todo">
+        SELECT *
+        FROM todo
+        WHERE member_id=#{memberId}
+        AND deleted_at IS NULL
+        ORDER BY id DESC
+        LIMIT #{page.size} OFFSET #{page.offset}
+    </select>
+
+    <select id="findById" resultType="com.aryang.todo.domain.todo.entity.Todo">
+        SELECT *
+        FROM todo
+        WHERE id=#{id}
+        AND deleted_at IS NULL
+    </select>
+
+    <select id="countByMemberId" resultType="int">
+        SELECT COUNT(*) FROM todo
+        WHERE member_id = #{memberId}
+        AND deleted_at IS NULL
+    </select>
+
+    <update id="update" parameterType="com.aryang.todo.domain.todo.entity.Todo">
+        UPDATE todo
+        <set>
+            content = #{content},
+            is_done = #{isDone},
+            updated_at = NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Long">
+        UPDATE todo
+        SET deleted_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

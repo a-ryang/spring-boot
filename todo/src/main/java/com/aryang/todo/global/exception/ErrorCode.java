@@ -3,11 +3,14 @@ package com.aryang.todo.global.exception;
 public enum ErrorCode {
     INVALID_REQUEST(400, "Invalid request"),
     INVALID_VALUE_TYPES(400, "Invalid value types"),
+    UNAUTHORIZED_ACCESS(403, "No authorization"),
     RESOURCE_NOT_FOUND(404, "Resource not found"),
     METHOD_NOT_ALLOWED(405,  "Invalid Method"),
     UNSUPPORTED_MEDIA_TYPE(415, "Media type not supported"),
     PAYLOAD_TOO_LARGE(413, "File size exceeds maximum limit"),
-    INTERNAL_SERVER_ERROR(500, "Server Error");
+    INTERNAL_SERVER_ERROR(500, "Server Error"),
+
+    TODO_NOT_FOUND(404, "Todo not found");
 
 
 

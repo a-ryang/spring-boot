@@ -1,6 +1,7 @@
 package com.aryang.todo.global.exception;
 
 import jakarta.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 public class AppExceptionHandler {
-
 
     /**
      * - 주로 @Valid 또는 @Validated에서 발생한 요청 데이터 검증 실패 예외를 처리
