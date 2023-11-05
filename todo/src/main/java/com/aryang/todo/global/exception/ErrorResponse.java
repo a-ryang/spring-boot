@@ -83,11 +83,19 @@ public class ErrorResponse {
         private static List<FieldError> of(final BindingResult bindingResult) {
             final List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
             return fieldErrors.stream()
-                    .map(error -> new FieldError(
-                            error.getField(),
-                            error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
-                            error.getDefaultMessage()))
+                    .map(error -> {
+                        String reason = error.getDefaultMessage();
+                        // 타입 변환 실패 메시지
+                        if (reason.startsWith("Failed to convert")) {
+                            reason = "Invalid format for field '" + error.getField();
+                        }
+                        return new FieldError(
+                                error.getField(),
+                                error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
+                                reason);
+                    })
                     .collect(Collectors.toList());
         }
+
     }
 }
