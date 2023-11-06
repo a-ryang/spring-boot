@@ -2,6 +2,9 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.5'
 	id 'io.spring.dependency-management' version '1.1.3'
+
+	// vue 빌드 작업을 위한 node https://github.com/node-gradle/gradle-node-plugin
+	id "com.github.node-gradle.node" version "7.0.1"
 }
 
 group = 'com.a-ryang'
@@ -43,3 +46,22 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+node {
+	// Whether to download and install a specific Node.js version or not
+	// If false, it will use the globally installed Node.js
+	// If true, it will download node using above parameters
+	// Note that npm is bundled with Node.js
+	download = true
+	version = "18.17.1"
+
+	nodeProjectDir = file("${project.projectDir}/app")
+}
+
+task buildVueApp(type: NpmTask) {
+	dependsOn npmInstall
+	args = ['run', 'build']
+}
+
+// jar 작업이 실행되기 전 Vue 빌드 및 복사
+bootJar.dependsOn buildVueApp
