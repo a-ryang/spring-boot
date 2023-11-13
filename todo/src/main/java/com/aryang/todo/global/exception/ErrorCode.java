@@ -10,6 +10,9 @@ public enum ErrorCode {
     PAYLOAD_TOO_LARGE(413, "File size exceeds maximum limit"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),
 
+    ALREADY_EXISTS_EMAIL(409, "Email is not available"),
+    ALREADY_EXISTS_NICKNAME(409, "Nickname is not available"),
+
     TODO_NOT_FOUND(404, "Todo not found");
 
 

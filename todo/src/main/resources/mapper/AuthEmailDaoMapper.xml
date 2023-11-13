@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aryang.todo.domain.auth.dao.AuthEmailDao">
+
+    <insert
+            id="save"
+            parameterType="com.aryang.todo.domain.auth.entity.AuthEmail"
+            useGeneratedKeys="true"
+            keyProperty="id"
+    >
+        INSERT INTO auth_email (member_id, email, password)
+        VALUES (#{memberId}, #{email}, #{password})
+    </insert>
+
+    <select id="findByEmail" resultType="com.aryang.todo.domain.auth.entity.AuthEmail">
+        SELECT
+        id,
+        member_id,
+        email,
+        password
+        FROM auth_email
+        WHERE email=#{email}
+        AND deleted_at IS NULL
+    </select>
+
+</mapper>

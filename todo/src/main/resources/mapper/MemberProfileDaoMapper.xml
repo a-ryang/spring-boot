@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aryang.todo.domain.member.dao.MemberProfileDao">
+
+    <insert
+            id="save"
+            parameterType="com.aryang.todo.domain.member.entity.MemberProfile"
+            useGeneratedKeys="true"
+            keyProperty="id"
+    >
+        INSERT INTO member_profile (id, nickname)
+        VALUES (#{id}, #{nickname})
+    </insert>
+
+    <select id="findByNickname" resultType="com.aryang.todo.domain.member.entity.MemberProfile">
+        SELECT
+        id,
+        nickname,
+        created_at,
+        updated_at
+        FROM member_profile
+        WHERE nickname=#{nickname}
+        AND deleted_at IS NULL
+    </select>
+
+</mapper>
