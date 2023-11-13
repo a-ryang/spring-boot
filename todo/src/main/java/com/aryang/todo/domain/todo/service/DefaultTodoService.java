@@ -50,7 +50,6 @@ public class DefaultTodoService implements TodoService {
                 .build();
     }
 
-
     @Override
     public Todo getById(Long id) {
         return dao.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.TODO_NOT_FOUND));
@@ -58,57 +57,56 @@ public class DefaultTodoService implements TodoService {
 
     @Override
     public Todo update(Long memberId, Long id, UpdateTodoRequest payload) {
-
-        Todo foundTodo = dao.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.TODO_NOT_FOUND));
+        Todo foundTodo = getById(id);
+        checkMemberAccess(memberId, foundTodo);
 
         foundTodo.update(payload.content());
+        int result = dao.update(foundTodo);
 
-        dao.update(foundTodo);
+        if(result == 0) throw new BusinessException(ErrorCode.TODO_NOT_FOUND);
 
         return foundTodo;
     }
 
     @Override
     public Todo complete(Long memberId, Long id) {
-        Todo foundTodo = dao.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.TODO_NOT_FOUND));
-
-        if (!foundTodo.getMemberId().equals(memberId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        Todo foundTodo = getById(id);
+        checkMemberAccess(memberId, foundTodo);
 
         foundTodo.complete();
-        dao.update(foundTodo);
+        int result = dao.update(foundTodo);
+
+        if(result == 0) throw new BusinessException(ErrorCode.TODO_NOT_FOUND);
 
         return foundTodo;
     }
 
     @Override
     public Todo uncomplete(Long memberId, Long id) {
-        Todo foundTodo = dao.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.TODO_NOT_FOUND));
-
-        if (!foundTodo.getMemberId().equals(memberId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        Todo foundTodo = getById(id);
+        checkMemberAccess(memberId, foundTodo);
 
         foundTodo.uncomplete();
-        dao.update(foundTodo);
+        int result = dao.update(foundTodo);
+
+        if(result == 0) throw new BusinessException(ErrorCode.TODO_NOT_FOUND);
 
         return foundTodo;
     }
 
     @Override
     public void delete(Long memberId, Long id) {
-        Todo foundTodo = dao.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.TODO_NOT_FOUND));
-
-        if (!foundTodo.getMemberId().equals(memberId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        Todo foundTodo = getById(id);
+        checkMemberAccess(memberId, foundTodo);
 
         int result = dao.delete(id);
         if(result == 0) throw new BusinessException(ErrorCode.TODO_NOT_FOUND);
     }
+
+    private void checkMemberAccess(Long memberId, Todo todo) {
+        if (!todo.getMemberId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+    }
+
 }
