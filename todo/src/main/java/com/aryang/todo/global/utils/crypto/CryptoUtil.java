@@ -12,7 +12,7 @@ import java.util.Base64;
 public class CryptoUtil {
 
     private static final String ALGORITHM = "AES";
-    private static final byte[] KEY = "\\ND<l\"n)|O9eVwG<".getBytes();
+    private static final byte[] KEY = "\\ND<l\"n)|O9eVwG<".getBytes(); // 환경변수 사용하기
 
     public String encrypt(String value) {
         try {
@@ -43,7 +43,6 @@ public class CryptoUtil {
             byte[] decryptedByteValue = cipher.doFinal(decryptedValue64);
             return new String(decryptedByteValue, "utf-8");
         } catch (Exception e) {
-            System.out.println("e = " + e);
             throw new CryptoException("Decryption failed", e);
         }
     }
